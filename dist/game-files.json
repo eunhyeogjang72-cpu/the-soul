@@ -1,70 +1,46 @@
 {
   "index.pck": {
-    "size": 299359632,
-    "storedSize": 299359632,
+    "size": 168674796,
+    "storedSize": 168674796,
     "encoding": "identity",
-    "sha256": "98d515944ffe35c45009ea4c8ac35977311c9fc3208b75633373d8abeba3cb0a",
+    "sha256": "bfa218cfb12dda5a0dccd6615ca56ef3fd472b4d8a17e3e238cd2254e6f88d41",
     "type": "application/octet-stream",
     "parts": [
       {
-        "file": "game-assets/98d515944ffe35c45009ea4c8ac35977311c9fc3208b75633373d8abeba3cb0a/index.pck.000.bin",
+        "file": "game-assets/bfa218cfb12dda5a0dccd6615ca56ef3fd472b4d8a17e3e238cd2254e6f88d41/index.pck.000.bin",
         "size": 20971520
       },
       {
-        "file": "game-assets/98d515944ffe35c45009ea4c8ac35977311c9fc3208b75633373d8abeba3cb0a/index.pck.001.bin",
+        "file": "game-assets/bfa218cfb12dda5a0dccd6615ca56ef3fd472b4d8a17e3e238cd2254e6f88d41/index.pck.001.bin",
         "size": 20971520
       },
       {
-        "file": "game-assets/98d515944ffe35c45009ea4c8ac35977311c9fc3208b75633373d8abeba3cb0a/index.pck.002.bin",
+        "file": "game-assets/bfa218cfb12dda5a0dccd6615ca56ef3fd472b4d8a17e3e238cd2254e6f88d41/index.pck.002.bin",
         "size": 20971520
       },
       {
-        "file": "game-assets/98d515944ffe35c45009ea4c8ac35977311c9fc3208b75633373d8abeba3cb0a/index.pck.003.bin",
+        "file": "game-assets/bfa218cfb12dda5a0dccd6615ca56ef3fd472b4d8a17e3e238cd2254e6f88d41/index.pck.003.bin",
         "size": 20971520
       },
       {
-        "file": "game-assets/98d515944ffe35c45009ea4c8ac35977311c9fc3208b75633373d8abeba3cb0a/index.pck.004.bin",
+        "file": "game-assets/bfa218cfb12dda5a0dccd6615ca56ef3fd472b4d8a17e3e238cd2254e6f88d41/index.pck.004.bin",
         "size": 20971520
       },
       {
-        "file": "game-assets/98d515944ffe35c45009ea4c8ac35977311c9fc3208b75633373d8abeba3cb0a/index.pck.005.bin",
+        "file": "game-assets/bfa218cfb12dda5a0dccd6615ca56ef3fd472b4d8a17e3e238cd2254e6f88d41/index.pck.005.bin",
         "size": 20971520
       },
       {
-        "file": "game-assets/98d515944ffe35c45009ea4c8ac35977311c9fc3208b75633373d8abeba3cb0a/index.pck.006.bin",
+        "file": "game-assets/bfa218cfb12dda5a0dccd6615ca56ef3fd472b4d8a17e3e238cd2254e6f88d41/index.pck.006.bin",
         "size": 20971520
       },
       {
-        "file": "game-assets/98d515944ffe35c45009ea4c8ac35977311c9fc3208b75633373d8abeba3cb0a/index.pck.007.bin",
+        "file": "game-assets/bfa218cfb12dda5a0dccd6615ca56ef3fd472b4d8a17e3e238cd2254e6f88d41/index.pck.007.bin",
         "size": 20971520
       },
       {
-        "file": "game-assets/98d515944ffe35c45009ea4c8ac35977311c9fc3208b75633373d8abeba3cb0a/index.pck.008.bin",
-        "size": 20971520
-      },
-      {
-        "file": "game-assets/98d515944ffe35c45009ea4c8ac35977311c9fc3208b75633373d8abeba3cb0a/index.pck.009.bin",
-        "size": 20971520
-      },
-      {
-        "file": "game-assets/98d515944ffe35c45009ea4c8ac35977311c9fc3208b75633373d8abeba3cb0a/index.pck.010.bin",
-        "size": 20971520
-      },
-      {
-        "file": "game-assets/98d515944ffe35c45009ea4c8ac35977311c9fc3208b75633373d8abeba3cb0a/index.pck.011.bin",
-        "size": 20971520
-      },
-      {
-        "file": "game-assets/98d515944ffe35c45009ea4c8ac35977311c9fc3208b75633373d8abeba3cb0a/index.pck.012.bin",
-        "size": 20971520
-      },
-      {
-        "file": "game-assets/98d515944ffe35c45009ea4c8ac35977311c9fc3208b75633373d8abeba3cb0a/index.pck.013.bin",
-        "size": 20971520
-      },
-      {
-        "file": "game-assets/98d515944ffe35c45009ea4c8ac35977311c9fc3208b75633373d8abeba3cb0a/index.pck.014.bin",
-        "size": 5758352
+        "file": "game-assets/bfa218cfb12dda5a0dccd6615ca56ef3fd472b4d8a17e3e238cd2254e6f88d41/index.pck.008.bin",
+        "size": 902636
       }
     ]
   },
