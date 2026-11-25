@@ -96,7 +96,7 @@ body {
 
 	<meta name="theme-color" content="#141c23">
 		<link rel="manifest" href="app.webmanifest">
-		<script defer src="web-app.js?v=1580a1d3bc3608391b8d3a46863cb53a0fa3daea7431a6457829c735dfc4c703" data-release="1580a1d3bc3608391b8d3a46863cb53a0fa3daea7431a6457829c735dfc4c703"></script>
+		<script defer src="web-app.js?v=b1ffebdf9b0946795a812c1894f3811377bb7c96cf5fb49602928c5f23884bac" data-release="b1ffebdf9b0946795a812c1894f3811377bb7c96cf5fb49602928c5f23884bac"></script>
 		</head>
 	<body>
 		<canvas id="canvas">
@@ -113,10 +113,10 @@ body {
 			<div id="status-notice"></div>
 		</div>
 
-		<script src="game-loader.js?v=8b647e119442dd9b"></script>
+		<script src="game-loader.js?v=fd5e4ef88b697e6e"></script>
 		<script src="index.js"></script>
 		<script>
-const GODOT_CONFIG = {"args":[],"canvasResizePolicy":0,"emscriptenPoolSize":8,"ensureCrossOriginIsolationHeaders":true,"executable":"index","experimentalVK":false,"fileSizes":{"index.pck":177464264,"index.wasm":39509339},"focusCanvas":true,"gdextensionLibs":[],"godotPoolSize":4};
+const GODOT_CONFIG = {"args":[],"canvasResizePolicy":0,"emscriptenPoolSize":8,"ensureCrossOriginIsolationHeaders":true,"executable":"index","experimentalVK":false,"fileSizes":{"index.pck":177493168,"index.wasm":39509339},"focusCanvas":true,"gdextensionLibs":[],"godotPoolSize":4};
 const GODOT_THREADS_ENABLED = false;
 function configureGameCanvas(canvas) {
   const aspect = 16 / 9;
@@ -124,12 +124,14 @@ function configureGameCanvas(canvas) {
     { title: '선명', maxWidth: 1920 },
     { title: '균형', maxWidth: 1600 },
     { title: '성능', maxWidth: 1280 },
+    { title: '경량', maxWidth: 960 },
   ];
   const preferenceKey = 'the-soul.canvas-quality';
-  let mode = 0;
+  let mode = window.matchMedia('(pointer: coarse)').matches ? 3 : 1;
   try {
-    const saved = Number(localStorage.getItem(preferenceKey));
-    if (Number.isInteger(saved) && saved >= 0 && saved < modes.length) mode = saved;
+    const preference = localStorage.getItem(preferenceKey);
+    const saved = Number(preference);
+    if (preference !== null && Number.isInteger(saved) && saved >= 0 && saved < modes.length) mode = saved;
   } catch {
     // Browsers can deny storage in private sessions.
   }
