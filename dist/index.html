@@ -96,7 +96,7 @@ body {
 
 	<meta name="theme-color" content="#141c23">
 		<link rel="manifest" href="app.webmanifest">
-		<script defer src="web-app.js?v=035d630a4ab67bf3b235aaa8564b3857835a405e43e2a3b5906a07d650208bcf" data-release="035d630a4ab67bf3b235aaa8564b3857835a405e43e2a3b5906a07d650208bcf"></script>
+		<script defer src="web-app.js?v=b3a7d6604c174a887672e1d686b3404c7fd78ece065a83eb84bebf0c08c987ce" data-release="b3a7d6604c174a887672e1d686b3404c7fd78ece065a83eb84bebf0c08c987ce"></script>
 		</head>
 	<body>
 		<canvas id="canvas">
@@ -113,15 +113,26 @@ body {
 			<div id="status-notice"></div>
 		</div>
 
-		<script src="game-loader.js?v=de7098827410002f"></script>
+		<script src="game-loader.js?v=274efebeaa5a510f"></script>
 		<script src="index.js"></script>
 		<script>
-const GODOT_CONFIG = {"args":[],"canvasResizePolicy":0,"emscriptenPoolSize":8,"ensureCrossOriginIsolationHeaders":true,"executable":"index","experimentalVK":false,"fileSizes":{"index.pck":177464408,"index.wasm":39509339},"focusCanvas":true,"gdextensionLibs":[],"godotPoolSize":4};
+const GODOT_CONFIG = {"args":[],"canvasResizePolicy":0,"emscriptenPoolSize":8,"ensureCrossOriginIsolationHeaders":true,"executable":"index","experimentalVK":false,"fileSizes":{"index.pck":177463800,"index.wasm":39509339},"focusCanvas":true,"gdextensionLibs":[],"godotPoolSize":4};
 const GODOT_THREADS_ENABLED = false;
 function configureGameCanvas(canvas) {
   const aspect = 16 / 9;
-  const resolutions = [1152, 960, 800];
-  let level = 0;
+  const modes = [
+    { title: '선명', maxWidth: 1920 },
+    { title: '균형', maxWidth: 1600 },
+    { title: '성능', maxWidth: 1280 },
+  ];
+  const preferenceKey = 'the-soul.canvas-quality';
+  let mode = 0;
+  try {
+    const saved = Number(localStorage.getItem(preferenceKey));
+    if (Number.isInteger(saved) && saved >= 0 && saved < modes.length) mode = saved;
+  } catch {
+    // Browsers can deny storage in private sessions.
+  }
 
   Object.assign(canvas.style, {
     position: 'absolute', left: '50%', top: '50%', transform: 'translate(-50%, -50%)',
@@ -129,11 +140,11 @@ function configureGameCanvas(canvas) {
 
   function resize() {
     const visibleWidth = Math.min(window.innerWidth, window.innerHeight * aspect);
-    const visibleHeight = visibleWidth / aspect;
-    const width = Math.max(1, Math.round(Math.min(visibleWidth * (window.devicePixelRatio || 1), resolutions[level])));
-    const height = Math.max(1, Math.round(width / aspect));
+    const physicalWidth = visibleWidth * (window.devicePixelRatio || 1);
+    const width = Math.max(16, Math.min(modes[mode].maxWidth, Math.round(physicalWidth / 16) * 16));
+    const height = width / aspect;
     canvas.style.width = `${visibleWidth}px`;
-    canvas.style.height = `${visibleHeight}px`;
+    canvas.style.height = `${visibleWidth / aspect}px`;
     if (canvas.width !== width) canvas.width = width;
     if (canvas.height !== height) canvas.height = height;
   }
@@ -142,51 +153,27 @@ function configureGameCanvas(canvas) {
   window.addEventListener('resize', resize);
   resize();
 
-  return function startMonitoring() {
-    let previous = 0;
-    let windowStart = 0;
-    let frames = 0;
-    let late = 0;
-    let slowWindows = 0;
-    let frameRequest;
-
-    function sample(now) {
-      if (previous) {
-        frames++;
-        if (now - previous > 23) late++;
-      }
-      previous = now;
-      if (!windowStart) windowStart = now;
-      if (now - windowStart >= 2000) {
-        slowWindows = late > frames / 4 ? slowWindows + 1 : 0;
-        windowStart = now;
-        frames = late = 0;
-        if (slowWindows >= 2) {
-          slowWindows = 0;
-          level++;
-          resize();
-          // Keep the selected resolution for this session to avoid repeated canvas resets.
-          if (level === resolutions.length - 1) {
-            document.removeEventListener('visibilitychange', resume);
-            return;
-          }
-        }
-      }
-      frameRequest = requestAnimationFrame(sample);
+  return function showQualityPicker() {
+    const button = document.createElement('button');
+    button.type = 'button';
+    button.style.cssText = 'position:fixed;z-index:10;bottom:max(6px,env(safe-area-inset-bottom));right:max(6px,env(safe-area-inset-right));min-height:36px;padding:4px 10px;border:1px solid #a89272;border-radius:7px;background:#141c23ed;color:#fff;font:600 13px system-ui;cursor:pointer';
+    function labelQuality() {
+      button.textContent = `화질 ${modes[mode].title}`;
+      button.title = `다음 화질 · ${modes[(mode + 1) % modes.length].title}`;
     }
-
-    function resume() {
-      cancelAnimationFrame(frameRequest);
-      previous = windowStart = frames = late = slowWindows = 0;
-      if (document.visibilityState === 'visible') frameRequest = requestAnimationFrame(sample);
-    }
-
-    document.addEventListener('visibilitychange', resume);
-    resume();
+    button.addEventListener('click', () => {
+      mode = (mode + 1) % modes.length;
+      try { localStorage.setItem(preferenceKey, String(mode)); } catch {}
+      resize();
+      labelQuality();
+      canvas.focus({ preventScroll: true });
+    });
+    labelQuality();
+    document.body.append(button);
   };
 }
 
-const startCanvasMonitoring = configureGameCanvas(document.getElementById('canvas'));
+const showCanvasQuality = configureGameCanvas(document.getElementById('canvas'));
 const engine = new Engine(GODOT_CONFIG);
 
 (function () {
@@ -285,7 +272,7 @@ const engine = new Engine(GODOT_CONFIG);
 			},
 		}).then(() => {
 			setStatusMode('hidden');
-			startCanvasMonitoring();
+			showCanvasQuality();
 		}, displayFailureNotice);
 	}
 }());
