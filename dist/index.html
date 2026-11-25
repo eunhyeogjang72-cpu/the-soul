@@ -96,7 +96,7 @@ body {
 
 	<meta name="theme-color" content="#141c23">
 		<link rel="manifest" href="app.webmanifest">
-		<script defer src="web-app.js?v=c3a9f97518030b781d5b1f4607d1f0f48b4bbb036aea1251a2b30f4869d86b4a" data-release="c3a9f97518030b781d5b1f4607d1f0f48b4bbb036aea1251a2b30f4869d86b4a"></script>
+		<script defer src="web-app.js?v=035d630a4ab67bf3b235aaa8564b3857835a405e43e2a3b5906a07d650208bcf" data-release="035d630a4ab67bf3b235aaa8564b3857835a405e43e2a3b5906a07d650208bcf"></script>
 		</head>
 	<body>
 		<canvas id="canvas">
@@ -113,11 +113,80 @@ body {
 			<div id="status-notice"></div>
 		</div>
 
-		<script src="game-loader.js?v=50e9f18b09eb5fd1"></script>
+		<script src="game-loader.js?v=de7098827410002f"></script>
 		<script src="index.js"></script>
 		<script>
-const GODOT_CONFIG = {"args":[],"canvasResizePolicy":2,"emscriptenPoolSize":8,"ensureCrossOriginIsolationHeaders":true,"executable":"index","experimentalVK":false,"fileSizes":{"index.pck":175630092,"index.wasm":39509339},"focusCanvas":true,"gdextensionLibs":[],"godotPoolSize":4};
+const GODOT_CONFIG = {"args":[],"canvasResizePolicy":0,"emscriptenPoolSize":8,"ensureCrossOriginIsolationHeaders":true,"executable":"index","experimentalVK":false,"fileSizes":{"index.pck":177464408,"index.wasm":39509339},"focusCanvas":true,"gdextensionLibs":[],"godotPoolSize":4};
 const GODOT_THREADS_ENABLED = false;
+function configureGameCanvas(canvas) {
+  const aspect = 16 / 9;
+  const resolutions = [1152, 960, 800];
+  let level = 0;
+
+  Object.assign(canvas.style, {
+    position: 'absolute', left: '50%', top: '50%', transform: 'translate(-50%, -50%)',
+  });
+
+  function resize() {
+    const visibleWidth = Math.min(window.innerWidth, window.innerHeight * aspect);
+    const visibleHeight = visibleWidth / aspect;
+    const width = Math.max(1, Math.round(Math.min(visibleWidth * (window.devicePixelRatio || 1), resolutions[level])));
+    const height = Math.max(1, Math.round(width / aspect));
+    canvas.style.width = `${visibleWidth}px`;
+    canvas.style.height = `${visibleHeight}px`;
+    if (canvas.width !== width) canvas.width = width;
+    if (canvas.height !== height) canvas.height = height;
+  }
+
+  if (window.ResizeObserver) new ResizeObserver(resize).observe(document.documentElement);
+  window.addEventListener('resize', resize);
+  resize();
+
+  return function startMonitoring() {
+    let previous = 0;
+    let windowStart = 0;
+    let frames = 0;
+    let late = 0;
+    let slowWindows = 0;
+    let frameRequest;
+
+    function sample(now) {
+      if (previous) {
+        frames++;
+        if (now - previous > 23) late++;
+      }
+      previous = now;
+      if (!windowStart) windowStart = now;
+      if (now - windowStart >= 2000) {
+        slowWindows = late > frames / 4 ? slowWindows + 1 : 0;
+        windowStart = now;
+        frames = late = 0;
+        if (slowWindows >= 2) {
+          slowWindows = 0;
+          level++;
+          resize();
+          // Keep the selected resolution for this session to avoid repeated canvas resets.
+          if (level === resolutions.length - 1) {
+            document.removeEventListener('visibilitychange', resume);
+            return;
+          }
+        }
+      }
+      frameRequest = requestAnimationFrame(sample);
+    }
+
+    function resume() {
+      cancelAnimationFrame(frameRequest);
+      previous = windowStart = frames = late = slowWindows = 0;
+      if (document.visibilityState === 'visible') frameRequest = requestAnimationFrame(sample);
+    }
+
+    document.addEventListener('visibilitychange', resume);
+    resume();
+  };
+}
+
+const startCanvasMonitoring = configureGameCanvas(document.getElementById('canvas'));
 const engine = new Engine(GODOT_CONFIG);
 
 (function () {
@@ -216,6 +285,7 @@ const engine = new Engine(GODOT_CONFIG);
 			},
 		}).then(() => {
 			setStatusMode('hidden');
+			startCanvasMonitoring();
 		}, displayFailureNotice);
 	}
 }());
